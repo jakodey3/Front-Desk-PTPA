@@ -1,0 +1,17 @@
+{
+  "name": "PTPA Front Desk Kiosk",
+  "short_name": "PTPA Kiosk",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f3f7",
+  "theme_color": "#4b1f6f",
+  "description": "Offline-ready visitor and parent front desk sign-in kiosk for PTPA.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

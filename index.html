@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#4b1f6f">
+  <meta name="description" content="PTPA Front Desk Kiosk">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>PTPA Front Desk Kiosk</title>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo-wrap"><img src="icon.svg" alt="PTPA Lion"></div>
+        <div>
+          <div class="eyebrow">Pentecostal Temple Preparatory Academy</div>
+          <h1>Front Desk Sign-In Kiosk</h1>
+          <div class="sub">Visitors • Officials/Agencies • Parent Check-In • Parent Check-Out</div>
+        </div>
+      </div>
+      <div class="top-right">
+        <div id="statusPill" class="status-pill">Offline-ready</div>
+        <button id="adminBtn" class="secondary">Admin</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="homeView" class="view active">
+        <div class="hero-card card">
+          <div class="hero-copy">
+            <div class="eyebrow gold">Welcome to PTPA</div>
+            <h2>Please select your kiosk option</h2>
+            <p>Use this front desk kiosk for visitor sign-in/sign-out or parent/guardian student check-in and check-out.</p>
+          </div>
+        </div>
+
+        <div class="tile-grid">
+          <button class="tile purple" data-open="visitorView">
+            <div class="tile-icon">🪪</div>
+            <div class="tile-title">Visitor Sign-In / Sign-Out</div>
+            <div class="tile-text">For guests, vendors, volunteers, and meeting visitors.</div>
+          </button>
+
+          <button class="tile official" data-open="officialView">
+            <div class="tile-icon">🏛️</div>
+            <div class="tile-title">Official / Agency Sign-In</div>
+            <div class="tile-text">For DCF, counselors, social workers, district staff, inspectors, law enforcement, and other officials.</div>
+          </button>
+
+          <button class="tile gold" data-open="parentInView">
+            <div class="tile-icon">👨‍👩‍👧‍👦</div>
+            <div class="tile-title">Parent Student Check-In</div>
+            <div class="tile-text">Use this to sign a child in late or return them to school.</div>
+          </button>
+
+          <button class="tile dark" data-open="parentOutView">
+            <div class="tile-icon">🚗</div>
+            <div class="tile-title">Parent Student Check-Out</div>
+            <div class="tile-text">Use this to sign a child out early from school.</div>
+          </button>
+        </div>
+      </section>
+
+      <section id="visitorView" class="view">
+        <div class="view-header">
+          <h2>Visitor Kiosk</h2>
+          <button class="secondary back-home">Back</button>
+        </div>
+
+        <div class="split-grid">
+          <div class="card">
+            <h3>Visitor Sign-In</h3>
+            <form id="visitorSignInForm" class="form-grid">
+              <label>First Name<input id="vFirstName" required maxlength="60"></label>
+              <label>Last Name<input id="vLastName" required maxlength="60"></label>
+              <label>Phone Number<input id="vPhone" inputmode="tel" maxlength="30"></label>
+              <label>Organization (optional)<input id="vOrg" maxlength="90"></label>
+              <label>Reason for Visit
+                <select id="vReason" required>
+                  <option value="">Select...</option>
+                  <option>Meeting</option>
+                  <option>Student Pickup</option>
+                  <option>Volunteer</option>
+                  <option>Vendor/Delivery</option>
+                  <option>Observation</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label>Visiting / Meeting With<input id="vMeetingWith" maxlength="90" placeholder="Staff member or office"></label>
+              <label class="wide">Notes (optional)<textarea id="vNotes" rows="3" maxlength="220"></textarea></label>
+              <button class="primary wide big">Sign In Visitor</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Visitor Sign-Out</h3>
+            <p class="hint">Enter the visitor's last name or phone number to locate open visits.</p>
+            <div class="search-row">
+              <input id="visitorSearch" placeholder="Search by last name or phone">
+              <button id="visitorSearchBtn" class="secondary">Search</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Visitor</th><th>Signed In</th><th>Reason</th><th></th></tr></thead>
+                <tbody id="visitorOpenTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="officialView" class="view">
+        <div class="view-header">
+          <h2>Official / Agency Kiosk</h2>
+          <button class="secondary back-home">Back</button>
+        </div>
+
+        <div class="split-grid">
+          <div class="card">
+            <h3>Official / Agency Sign-In</h3>
+            <form id="officialSignInForm" class="form-grid">
+              <label>First Name<input id="oFirstName" required maxlength="60"></label>
+              <label>Last Name<input id="oLastName" required maxlength="60"></label>
+
+              <label>Official / Agency Type
+                <select id="oType" required>
+                  <option value="">Select...</option>
+                  <option>DCF / Child Welfare</option>
+                  <option>Counselor / Therapist</option>
+                  <option>Social Worker</option>
+                  <option>District / School System Staff</option>
+                  <option>Law Enforcement</option>
+                  <option>Health Department / Inspector</option>
+                  <option>Fire Marshal / Fire Department</option>
+                  <option>State / Local Government Official</option>
+                  <option>Accreditation / Compliance Visitor</option>
+                  <option>Contractor / Service Provider</option>
+                  <option>Other</option>
+                </select>
+              </label>
+
+              <label>Agency / Department<input id="oAgency" required maxlength="100" placeholder="DCF, district office, agency, etc."></label>
+              <label>Title / Role<input id="oRole" maxlength="90" placeholder="Counselor, investigator, specialist..."></label>
+              <label>Credential / Badge ID (optional)<input id="oCredential" maxlength="60"></label>
+              <label>Phone / Contact (optional)<input id="oPhone" inputmode="tel" maxlength="40"></label>
+
+              <label>Purpose of Visit
+                <select id="oPurpose" required>
+                  <option value="">Select...</option>
+                  <option>Student Services / Support</option>
+                  <option>Investigation / Official Business</option>
+                  <option>Meeting / Consultation</option>
+                  <option>Inspection / Compliance</option>
+                  <option>Records / Documentation</option>
+                  <option>Safety / Emergency Services</option>
+                  <option>Observation / Program Visit</option>
+                  <option>Service / Maintenance</option>
+                  <option>Other</option>
+                </select>
+              </label>
+
+              <label>Meeting With / Office<input id="oMeetingWith" maxlength="100" placeholder="Principal, counselor, teacher, office..."></label>
+              <label class="wide">Notes (optional)<textarea id="oNotes" rows="3" maxlength="260" placeholder="Avoid entering confidential case details."></textarea></label>
+
+              <button class="primary wide big">Sign In Official / Agency Visitor</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Official / Agency Sign-Out</h3>
+            <p class="hint">Search by last name, agency, or credential/badge ID.</p>
+            <div class="search-row">
+              <input id="officialSearch" placeholder="Last name, agency, or credential ID">
+              <button id="officialSearchBtn" class="secondary">Search</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Official</th><th>Agency</th><th>Signed In</th><th></th></tr></thead>
+                <tbody id="officialOpenTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="parentInView" class="view">
+        <div class="view-header">
+          <h2>Parent Student Check-In</h2>
+          <button class="secondary back-home">Back</button>
+        </div>
+
+        <div class="split-grid single-center">
+          <div class="card narrow">
+            <form id="parentInForm" class="form-grid">
+              <label>Parent / Guardian Name<input id="piParentName" required maxlength="90"></label>
+              <label>Parent Phone (optional)<input id="piParentPhone" inputmode="tel" maxlength="30"></label>
+              <label>Student Number<input id="piStudentId" required maxlength="20"></label>
+              <label>Student Name<input id="piStudentName" maxlength="90" placeholder="Auto-fills if roster has this student"></label>
+              <label>Grade<input id="piGrade" maxlength="12" placeholder="Auto-fills if available"></label>
+              <label>Reason for Check-In
+                <select id="piReason" required>
+                  <option value="">Select...</option>
+                  <option>Late Arrival</option>
+                  <option>Returning from Appointment</option>
+                  <option>Parent Drop-Off</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label class="wide">Notes (optional)<textarea id="piNotes" rows="3" maxlength="220"></textarea></label>
+              <button class="primary wide big">Check Student In</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="parentOutView" class="view">
+        <div class="view-header">
+          <h2>Parent Student Check-Out</h2>
+          <button class="secondary back-home">Back</button>
+        </div>
+
+        <div class="split-grid single-center">
+          <div class="card narrow">
+            <form id="parentOutForm" class="form-grid">
+              <label>Parent / Guardian Name<input id="poParentName" required maxlength="90"></label>
+              <label>Parent Phone (optional)<input id="poParentPhone" inputmode="tel" maxlength="30"></label>
+              <label>Student Number<input id="poStudentId" required maxlength="20"></label>
+              <label>Student Name<input id="poStudentName" maxlength="90" placeholder="Auto-fills if roster has this student"></label>
+              <label>Grade<input id="poGrade" maxlength="12" placeholder="Auto-fills if available"></label>
+              <label>Reason for Check-Out
+                <select id="poReason" required>
+                  <option value="">Select...</option>
+                  <option>Early Dismissal</option>
+                  <option>Appointment</option>
+                  <option>Illness</option>
+                  <option>Transportation Change</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label class="wide">Notes (optional)<textarea id="poNotes" rows="3" maxlength="220"></textarea></label>
+              <button class="primary wide big">Check Student Out</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="adminView" class="view">
+        <div class="view-header">
+          <h2>Administrator Dashboard</h2>
+          <button id="backFromAdmin" class="secondary">Back</button>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <h3>Today's Summary</h3>
+            <div class="stats">
+              <div><span id="sumVisitors">0</span><small>Visitor Sign-Ins</small></div>
+              <div><span id="sumOfficials">0</span><small>Official Sign-Ins</small></div>
+              <div><span id="sumCheckIns">0</span><small>Student Check-Ins</small></div>
+              <div><span id="sumCheckOuts">0</span><small>Student Check-Outs</small></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Student Roster</h3>
+            <div class="toolbar">
+              <button id="addStudentBtn" class="primary">Add Student</button>
+              <label class="file-button">Import CSV<input id="rosterImportInput" type="file" accept=".csv,text/csv"></label>
+              <button id="exportRosterBtn" class="secondary">Export Roster</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Student #</th><th>Name</th><th>Grade</th><th>Status</th><th></th></tr></thead>
+                <tbody id="rosterTable"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Records</h3>
+            <div class="toolbar">
+              <input id="recordDate" type="date">
+              <select id="recordTypeFilter">
+                <option value="">All Record Types</option>
+                <option value="visitor_in">Visitor Sign-In</option>
+                <option value="visitor_out">Visitor Sign-Out</option>
+                <option value="official_in">Official / Agency Sign-In</option>
+                <option value="official_out">Official / Agency Sign-Out</option>
+                <option value="student_checkin">Student Check-In</option>
+                <option value="student_checkout">Student Check-Out</option>
+              </select>
+              <button id="refreshRecordsBtn" class="secondary">Refresh</button>
+              <button id="exportRecordsBtn" class="primary">Export CSV</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Time</th><th>Type</th><th>Name</th><th>Student #</th><th>Details</th><th></th></tr></thead>
+                <tbody id="recordsTable"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Backup & Settings</h3>
+            <div class="toolbar vertical">
+              <button id="downloadBackupBtn" class="primary">Download Full Backup</button>
+              <label class="file-button">Restore Backup<input id="restoreInput" type="file" accept=".json,application/json"></label>
+              <button id="changePinBtn" class="secondary">Change Admin PIN</button>
+              <button id="clearRecordsBtn" class="danger">Delete ALL Records</button>
+            </div>
+            <p class="hint">Default admin PIN: <strong>2468</strong>. Change it after setup.</p>
+          </div>
+        </div>
+      </section>
+
+      <div id="toast" class="toast hidden"></div>
+    </main>
+  </div>
+
+  <dialog id="adminDialog">
+    <form method="dialog" class="dialog-card" id="adminForm">
+      <h3>Administrator Access</h3>
+      <p>Enter the admin PIN.</p>
+      <input id="adminPinInput" type="password" inputmode="numeric" required maxlength="12">
+      <div class="dialog-actions">
+        <button value="cancel" class="secondary">Cancel</button>
+        <button value="default" class="primary">Unlock</button>
+      </div>
+      <div id="adminError" class="message error hidden">Incorrect PIN.</div>
+    </form>
+  </dialog>
+
+  <dialog id="studentDialog">
+    <form method="dialog" class="dialog-card" id="studentForm">
+      <h3 id="studentDialogTitle">Add Student</h3>
+      <label>Student Number<input id="sStudentId" required maxlength="20"></label>
+      <label>First Name<input id="sFirstName" required maxlength="60"></label>
+      <label>Last Name<input id="sLastName" required maxlength="60"></label>
+      <label>Grade<input id="sGrade" required maxlength="12"></label>
+      <label class="checkbox"><input id="sActive" type="checkbox" checked> Active</label>
+      <input id="editOriginalId" type="hidden">
+      <div class="dialog-actions">
+        <button value="cancel" class="secondary">Cancel</button>
+        <button value="default" class="primary">Save</button>
+      </div>
+      <div id="studentError" class="message error hidden"></div>
+    </form>
+  </dialog>
+
+  <dialog id="changePinDialog">
+    <form method="dialog" class="dialog-card" id="changePinForm">
+      <h3>Change Admin PIN</h3>
+      <label>New PIN<input id="newPin" type="password" inputmode="numeric" minlength="4" maxlength="12" required></label>
+      <label>Confirm PIN<input id="confirmPin" type="password" inputmode="numeric" minlength="4" maxlength="12" required></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="secondary">Cancel</button>
+        <button value="default" class="primary">Save PIN</button>
+      </div>
+      <div id="pinError" class="message error hidden"></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
